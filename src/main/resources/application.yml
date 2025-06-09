@@ -20,3 +20,8 @@ spring:
 jwt:
   secret:
     key: ${SECRET_KEY}
+
+server:
+  error:
+    include-message: always
+    include-binding-errors: always
