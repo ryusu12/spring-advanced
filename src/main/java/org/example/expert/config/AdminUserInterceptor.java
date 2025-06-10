@@ -3,21 +3,22 @@ package org.example.expert.config;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.example.expert.domain.common.exception.InvalidRequestException;
 import org.example.expert.domain.user.entity.User;
 import org.example.expert.domain.user.enums.UserRole;
 import org.example.expert.domain.user.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.time.LocalDateTime;
 
-@Slf4j
 @RequiredArgsConstructor
 public class AdminUserInterceptor implements HandlerInterceptor {
 
     private final UserRepository userRepository;
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Override
     public boolean preHandle(
