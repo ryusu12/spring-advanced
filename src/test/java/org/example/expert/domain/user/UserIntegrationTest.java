@@ -40,16 +40,16 @@ public class UserIntegrationTest {
     private static final String EMAIL = "user1@example.com";
     private static final String PASSWORD = "password";
     private static final String USER_ROLE = "user";
-    private static final Long USER_ID = 1L;
 
     @Test
     void 유저_조회_통합_테스트() throws Exception {
         // 1. given
         String bearerToken = getBearerTokenBySignup();
+        long userId = userRepository.findByEmail(EMAIL).orElseThrow().getId();
 
         // 2. when
         ResultActions getUserResult = mockMvc.perform(
-                get("/users/{userId}", USER_ID)
+                get("/users/{userId}", userId)
                         .header(HttpHeaders.AUTHORIZATION, bearerToken)
         );
         String userAsString = getUserResult.andReturn().getResponse().getContentAsString();
