@@ -53,16 +53,18 @@ public class AdminAspect {
     public Object logAdminRequestAdvice(ProceedingJoinPoint joinPoint) throws Throwable {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 
-        // 원래의 메서드를 실행하고 결과를 받습니다.
-        Object result = joinPoint.proceed();
-
+        // 요청 정보를 로깅합니다
         Long userId = (Long) request.getAttribute("userId");
         String url = request.getRequestURI();
         String requestBody = getRequestBody(joinPoint);
-        String responseBody = getResponseBody(result);
+        logAdminApiRequest(userId, url, requestBody);
 
-        // 추출된 정보를 바탕으로 로깅을 진행합니다.
-        logAdminApiRequest(userId, url, requestBody, responseBody);
+        // 원래의 메서드를 실행하고 결과를 받습니다.
+        Object result = joinPoint.proceed();
+
+        // 응답 정보를 로깅합니다
+        String responseBody = getResponseBody(result);
+        logger.info("ResponseBody: {}", responseBody);
 
         // 원래 메서드의 실행 결과를 반환합니다.
         return result;
@@ -72,12 +74,11 @@ public class AdminAspect {
      * 요청 정보를 바탕으로 로깅하는 메서드입니다.
      * Logger 클래스를 활용하여 INFO 레벨로 기록합니다.
      */
-    private void logAdminApiRequest(Long userId, String url, String requestBody, String responseBody) {
+    private void logAdminApiRequest(Long userId, String url, String requestBody) {
         logger.info("요청한 사용자의 ID: {}", userId);
         logger.info("API 요청 시각: {}", LocalDateTime.now());
         logger.info("API 요청 URL: {}", url);
         logger.info("RequestBody: {}", requestBody);
-        logger.info("ResponseBody: {}", responseBody);
     }
 
     /*
